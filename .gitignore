@@ -1,0 +1,6 @@
+repack
+.obj
+*.swp
+*.swo
+*~
+*.bin
