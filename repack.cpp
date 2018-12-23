@@ -31,68 +31,6 @@ static const enum {
 	big_endian,
 } cpu_endian = little_endian;
 
-// static int rom_to_hex(const char *src, const char *dst, uint32_t mem_size) {
-//     FILE *outfile;
-//     char bfr[4];
-//     uint32_t file_size = 0;
-
-//     int fd = open(src, O_RDONLY);
-//     if (fd == -1) {
-//         fprintf(stderr, "unable to open src rom file %s: %s\n", src, strerror(errno));
-//         return 1;
-//     }
-
-//     outfile = fopen(dst, "w");
-//     if (!outfile) {
-//         fprintf(stderr, "unable to open dest rom file %s: %s\n", dst, strerror(errno));
-//         return 1;
-//     }
-
-//     while (read(fd, bfr, 4) == 4) {
-// #ifdef SWAP_BYTES
-//         fprintf(outfile, "%02x%02x%02x%02x\n", 0xff & bfr[0], 0xff & bfr[1], 0xff & bfr[2], 0xff & bfr[3]);
-// #else
-//         fprintf(outfile, "%02x%02x%02x%02x\n", 0xff & bfr[3], 0xff & bfr[2], 0xff & bfr[1], 0xff & bfr[0]);
-// #endif
-//         file_size += 4;
-//     }
-
-//     memset(bfr, 0, sizeof(bfr));
-//     while (file_size < mem_size) {
-//         fprintf(outfile, "%02x%02x%02x%02x\n", 0xff & bfr[3], 0xff & bfr[2], 0xff & bfr[1], 0xff & bfr[0]);
-//         file_size += 4;
-//     }
-//     fclose(outfile);
-
-//     return 0;
-// }
-
-// static int patchup_mem(const char *src, const char *dst, uint32_t *mem_size) {
-//     *mem_size = 0;
-//     FILE *s = fopen(src, "r");
-//     if (!s) {
-//         fprintf(stderr, "unable to open source mem file %s: %s\n", src, strerror(errno));
-//         return 1;
-//     }
-
-//     FILE *d = fopen(dst, "w");
-//     if (!d) {
-//         fprintf(stderr, "unable to open dest mem file %s: %s\n", dst, strerror(errno));
-//         return 2;
-//     }
-
-//     char tmpline[128];
-//     while (fgets(tmpline, sizeof(tmpline)-1, s) != NULL) {
-//         uint32_t word = strtoul(tmpline, NULL, 16);
-//         fprintf(d, "%08x\n", word);
-//         *mem_size += 4;
-//     }
-
-//     fclose(d);
-//     fclose(s);
-//     return 0;
-// }
-
 static void push_back_bitvector(vector<vector<bool>> &hexfile, const vector<int> &digits)
 {
 	if (digits.empty())
