@@ -26,7 +26,10 @@ using std::getline;
 
 #define error(...) do { fprintf(stderr, "Error: " __VA_ARGS__); exit(1); } while (0)
 
-#define SWAP_BYTES // Define for lm32, undefine for riscv
+static const enum {
+	little_endian,
+	big_endian,
+} cpu_endian = little_endian;
 
 // static int rom_to_hex(const char *src, const char *dst, uint32_t mem_size) {
 //     FILE *outfile;
@@ -176,14 +179,19 @@ error:
 
 static void parse_binfile(const char *filename, std::istream &ifs, vector<vector<bool>> &hexfile)
 {
-    std::uint32_t n;
-    while (ifs.read(reinterpret_cast<char*>(&n), sizeof n)) {
+    std::uint32_t word;
+    while (ifs.read(reinterpret_cast<char*>(&word), sizeof word)) {
 	    vector<int> digits;
         std::stringstream stream;
-        stream << std::setfill ('0') << std::setw(8) << std::hex << n;
+		if (cpu_endian == big_endian)
+			word = (((word >> 24) & 0x000000ff)
+				 | ((word >> 8) & 0x0000ff00)
+				 | ((word << 8) & 0x00ff0000)
+				 | ((word << 24) & 0xff000000));
+		stream << std::setfill('0') << std::setw(8) << std::hex << word;
         std::string result(stream.str());
 
-        // fprintf(stderr, " %08x\n", n);
+        // fprintf(stdout, " %08x\n", word); fflush(stdout);
         // std::cerr << "result: " << result << "\n";
         for (char c : result) {
             if ('0' <= c && c <= '9')
@@ -387,8 +395,8 @@ int main(int argc, char **argv) {
         string line;
 
         parse_binfile(to_hexfile_n, to_hexfile_f, to_hexfile);
-       for (int i = 1; getline(from_hexfile_f, line); i++)
-           parse_hexfile_32bit_line(from_hexfile_n, i, from_hexfile, line, true);
+        for (int i = 1; getline(from_hexfile_f, line); i++)
+           parse_hexfile_32bit_line(from_hexfile_n, i, from_hexfile, line, cpu_endian == big_endian);
 
         if (to_hexfile.size() > 0 && from_hexfile.size() > to_hexfile.size()) {
             if (verbose)
