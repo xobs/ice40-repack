@@ -2,7 +2,7 @@ PACKAGE    = repack
 ADD_CFLAGS = 
 ADD_LFLAGS = 
 
-GIT_VERSION= $(shell git describe --tags)
+GIT_VERSION := $(shell git describe --tags)
 #TRGT      ?= arm-none-eabi-
 CC         = $(TRGT)gcc
 CXX        = $(TRGT)g++
