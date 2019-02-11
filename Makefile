@@ -1,4 +1,4 @@
-PACKAGE    = repack
+PACKAGE    = ice40-repack
 ADD_CFLAGS = 
 ADD_LFLAGS = 
 
