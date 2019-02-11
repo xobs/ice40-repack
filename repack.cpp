@@ -7,7 +7,6 @@
 #include <string.h>
 #include <errno.h>
 #include <assert.h>
-#include <endian.h>
 
 #include <fstream>
 #include <sstream>
